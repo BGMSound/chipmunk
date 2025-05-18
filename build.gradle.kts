@@ -4,16 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.plugin.spring) apply false
     alias(libs.plugins.spring.boot) apply false
-    alias(libs.plugins.spring.dependency.management)
     java
-}
-
-dependencyManagement {
-    val module = libs.spring.boot.dependencies.get().module
-    val version = libs.spring.boot.dependencies.get().version
-    imports {
-        mavenBom("$module:$version")
-    }
 }
 
 subprojects {

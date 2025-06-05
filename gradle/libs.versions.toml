@@ -1,13 +1,15 @@
 [versions]
-kotlin = "2.0.21"
+kotlin = "2.1.21"
 kotlinx-datetime = "0.6.1"
 kotlinx-serialization-json = "1.7.2"
-kotlinx-coroutines = "1.8.1"
+kotlinx-coroutines = "1.10.2"
 
-spring-boot = "3.4.1"
+spring-boot = "3.4.5"
+spring-ai = "1.0.0-SNAPSHOT"
 spring-dependency-management = "1.1.5"
 
 jackson = "2.17.2"
+jda = "5.5.1"
 
 [libraries]
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
@@ -21,9 +23,11 @@ spring-boot-starter-web = { group = "org.springframework.boot", name = "spring-b
 spring-boot-starter-webflux = { group = "org.springframework.boot", name = "spring-boot-starter-webflux", version.ref = "spring-boot" }
 spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "spring-boot" }
 spring-boot-dependencies = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "spring-boot" }
+spring-ai-starter-anthropic = { group = "org.springframework.ai", name = "spring-ai-starter-model-anthropic", version.ref = "spring-boot" }
 
 jackson-dataformat-yaml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version.ref = "jackson" }
 jackson-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
+jda = { group = "net.dv8tion", name = "JDA", version.ref = "jda" }
 
 [bundles]
 kotlinx-ecosystem = ["kotlinx-datetime", "kotlinx-serialization", "kotlinx-coroutines"]

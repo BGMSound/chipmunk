@@ -1,5 +1,9 @@
 rootProject.name = ext["project.name"].toString()
 
+autoIncludeChild("chipmunk-core", "core")
+autoIncludeChild("chipmunk-entrypoint", "entrypoint")
+includeModule("chipmunk-advice", "advice")
+
 fun includeModule(parentDirectory: String, name: String) {
     val modulePath = ":$name"
     include(modulePath)
@@ -38,11 +42,5 @@ pluginManagement {
     }
 }
 
-@Suppress("UnstableApiUsage")
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-    }
-}
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

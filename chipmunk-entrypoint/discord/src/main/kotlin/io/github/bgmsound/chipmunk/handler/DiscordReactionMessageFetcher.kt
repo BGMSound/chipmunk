@@ -31,6 +31,7 @@ class DiscordReactionMessageFetcher {
 
     private fun Message.toChat() = Chat(
         id = this.id,
+        platform = Chat.Platform.DISCORD,
         authorName = author.name,
         content = contentRaw,
         timestamp = timeCreated.toLocalDateTime()

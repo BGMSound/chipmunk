@@ -12,7 +12,7 @@ class DiscordReactionMessageFetcher {
         val messages = mutableListOf<Message>()
         if (channel is ThreadChannel) {
             val parentMessage = channel.retrieveParentMessage().complete()
-            if (parentMessage != null && !messages.contains(parentMessage)) {
+            if (parentMessage != null) {
                 messages.add(parentMessage)
             }
         }

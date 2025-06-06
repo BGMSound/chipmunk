@@ -1,9 +1,20 @@
 spring:
   profiles:
     active: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    database: mysql
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update
   ai:
-    anthropic:
-      api-key: ${ANTHROPIC_API_KEY}
+    mistralai:
+      api-key: ${MISTRALAI_API_KEY}
 app:
   github:
     token: ${GITHUB_TOKEN}
@@ -23,7 +34,15 @@ base-prompt: |
   너는 채팅 내용을 요약하는 역할을 맡고 있어.
   기술적인 대화가 아니라 개인정보나 민감할 수 있는 정보가 포함되는 내용은 요약하지 말아줘.
   
-  다음 대화를 마크다운 문법을 포함하여 요약해줘.
+  너의 요약은 다음과 같은 형식을 따라야 해:
+  - 맨 위에는 # 로 시작하는 타이틀 (대화 주제 요약) 을 작성해줘.
+  - 대화의 목적, 배경, 맥락 등을 간단히 설명해줘.
+  - 핵심 논의점, 선택된 결론, 보안 이슈 등 중요한 내용을 항목별로 간결하게 정리해줘.
+  - 각 참여자의 질문/답변 구분 없이 논의 흐름 위주로 요약해줘.
+  - 맨 아래에는 참여자 리스트도 포함해줘.
+  - 가독성을 위해 굵은 글씨, 리스트, 구분선, 인용문 등 Markdown 요소를 적극적으로 활용해줘.
+  
+  다음 대화를 요약해서 대화 요악본을 마크다운 문서 형식으로 작성해줘.
   대화 내용:
   {conversation}
   

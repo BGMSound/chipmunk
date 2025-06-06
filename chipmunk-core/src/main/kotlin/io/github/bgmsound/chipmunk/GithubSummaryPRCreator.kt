@@ -1,14 +1,14 @@
-package io.github.bgmsound.chipmunk.gateway
+package io.github.bgmsound.chipmunk
 
 import org.kohsuke.github.*
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
 @Component
-class GithubPRCreator(
-    private val remoteRepository: GHRepository,
+class GithubSummaryPRCreator(
+    private val remoteRepository: GHRepository
 ) {
-    fun createPR(summary: LLMSummary) {
+    fun createPR(summary: LLMSummary): SummaryPR {
         val date = LocalDate.now().toString()
 
         val prBranch = "${date}-${createRandomTail()}"
@@ -22,8 +22,10 @@ class GithubPRCreator(
             commitTopicSummary(summary.title, topic, prBranch)
         }
         val prTitle = "${summary.title} -(${date})"
-        val prBody = "자동생성 요약 PR\n- 날짜: $date\n- 토픽: ${summary.topics}"
-        remoteRepository.createPullRequest(prTitle, prBranch, baseBranch, prBody)
+        val prBody = "${summary.content}\n\n\n\n**[자동생성 요약 PR 정보]**\n- 날짜: $date\n- 토픽: ${summary.topics}"
+        val pullRequest = remoteRepository.createPullRequest(prTitle, prBranch, baseBranch, prBody)
+
+        return SummaryPR.of(pullRequest.id.toString(), pullRequest.htmlUrl.toString())
     }
 
     private fun getEnsuredRef(branch: String): GHRef {
@@ -46,13 +48,18 @@ class GithubPRCreator(
         return remoteRepository.createContent()
             .branch(branch)
             .path(dailyPath)
-            .content(summary.content)
+            .content(
+                StringBuilder().apply {
+                    append("${summary.content}\n\n")
+                    append("\n\n**[자동생성 요약 PR 정보]**\n- 날짜: ${LocalDate.now()}\n- 토픽: ${summary.topics.joinToString(", ")}\n")
+                }.toString()
+            )
             .message("Add daily summary for topic of ${summary.topics}")
             .commit()
     }
 
     private fun commitTopicSummary(title: String, topic: String, branch: String): GHContentUpdateResponse {
-        val topicPath = "docs/topics/${topic}.md"
+        val topicPath = "docs/topics/${topic.replace(" ", "-")}.md"
         val commitMessage = "Add topic summary for $topic on ${LocalDate.now()}}"
 
         val file = try {
@@ -64,7 +71,7 @@ class GithubPRCreator(
             append(file?.let {
                 val origin = file.read().bufferedReader().readText()
                 "$origin\n\n"
-            } ?: "## $topic 와 관련된 대화 목록\n")
+            } ?: "## \"$topic\" 주제와 관련된 대화 목록\n")
             append("- [${title} - (${branch})](../daily/${branch}.md)")
         }.toString()
         return remoteRepository.createContent()

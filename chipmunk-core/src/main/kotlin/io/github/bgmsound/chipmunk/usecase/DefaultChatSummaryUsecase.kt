@@ -1,19 +1,18 @@
 package io.github.bgmsound.chipmunk.usecase
 
 import io.github.bgmsound.chipmunk.Chat
-import io.github.bgmsound.chipmunk.SummaryResult
-import io.github.bgmsound.chipmunk.gateway.GithubPRCreator
-import io.github.bgmsound.chipmunk.gateway.LLMChatSummaryGateway
+import io.github.bgmsound.chipmunk.SummaryPR
+import io.github.bgmsound.chipmunk.GithubSummaryPRCreator
+import io.github.bgmsound.chipmunk.LLMChatSummaryAgent
 import org.springframework.stereotype.Component
 
 @Component
 class DefaultChatSummaryUsecase(
-    private val llmChatSummaryGateway: LLMChatSummaryGateway,
-    private val githubPRCreator: GithubPRCreator
+    private val llmChatSummaryAgent: LLMChatSummaryAgent,
+    private val prCreator: GithubSummaryPRCreator
 ) : ChatSummaryUsecase {
-    override fun summarizeMessage(chats: List<Chat>): SummaryResult {
-        val llmSummary = llmChatSummaryGateway.summarizeMessage(chats)
-        githubPRCreator.createPR(llmSummary)
-        return SummaryResult()
+    override fun summarizeMessage(chats: List<Chat>): SummaryPR {
+        val llmSummary = llmChatSummaryAgent.summarizeMessage(chats)
+        return prCreator.createPR(llmSummary)
     }
 }

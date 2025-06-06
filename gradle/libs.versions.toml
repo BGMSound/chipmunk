@@ -8,8 +8,10 @@ spring-boot = "3.4.5"
 spring-ai = "1.0.0-SNAPSHOT"
 spring-dependency-management = "1.1.5"
 
+github-api = "2.0-rc.3"
 jackson = "2.17.2"
 jda = "5.5.1"
+mysql = "8.0.33"
 
 [libraries]
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
@@ -23,11 +25,13 @@ spring-boot-starter-web = { group = "org.springframework.boot", name = "spring-b
 spring-boot-starter-webflux = { group = "org.springframework.boot", name = "spring-boot-starter-webflux", version.ref = "spring-boot" }
 spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test", version.ref = "spring-boot" }
 spring-boot-dependencies = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "spring-boot" }
-spring-ai-starter-anthropic = { group = "org.springframework.ai", name = "spring-ai-starter-model-anthropic", version.ref = "spring-boot" }
+spring-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa", version.ref = "spring-boot" }
 
 jackson-dataformat-yaml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version.ref = "jackson" }
 jackson-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
 jda = { group = "net.dv8tion", name = "JDA", version.ref = "jda" }
+github-api = { group = "org.kohsuke", name = "github-api", version.ref = "github-api" }
+mysql = { group = "mysql", name = "mysql-connector-java", version.ref = "mysql" }
 
 [bundles]
 kotlinx-ecosystem = ["kotlinx-datetime", "kotlinx-serialization", "kotlinx-coroutines"]

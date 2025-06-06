@@ -1,3 +1,7 @@
+plugins {
+    alias(libs.plugins.jpa)
+}
+
 dependencies {
     implementation(platform("org.springframework.ai:spring-ai-bom:1.0.0-SNAPSHOT"))
     implementation("org.springframework.ai:spring-ai-starter-model-mistral-ai")

@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Value
 class LLMChatSummaryAgent(
     @Value("\${base-prompt}") private val basePrompt: String,
 
+    private val topicRepository: TopicRepository,
     private val objectMapper: ObjectMapper,
     private val model: ChatModel
 ) {
-    private val logger = LoggerFactory.getLogger(javaClass)
     private val systemPrompt = """
             응답 형식은 다음과 같아.
             ${objectMapper.writeValueAsString(SAMPLE_SUMMARY)}
@@ -25,7 +25,7 @@ class LLMChatSummaryAgent(
             - 반환 결과에 불필요한 이스케이프(\")나 역슬래시가 남지 않게 해줘.
             
             기존에 존재하는 토픽 리스트:
-            ${objectMapper.writeValueAsString(listOf<String>())}
+            ${objectMapper.writeValueAsString(topicRepository.getAll().map { it.name })}
             
             기존에 존재하는 토픽 중 대화 주제에 관련한 토픽이 있으면 포함해주고,
             원하는 토픽이 존재하지 않거나 대화 주제에 관련한 새로운 토픽이 있다면, topics 리스트에 추가해서 응답해줘.
@@ -49,7 +49,6 @@ class LLMChatSummaryAgent(
             .replace(Regex("^```json\\s*"), "")
             .replace(Regex("\\s*```$"), "")
             .trim()
-        logger.info(summaryRawContent)
         return objectMapper.readValue(summaryRawContent, LLMSummary::class.java)
     }
 

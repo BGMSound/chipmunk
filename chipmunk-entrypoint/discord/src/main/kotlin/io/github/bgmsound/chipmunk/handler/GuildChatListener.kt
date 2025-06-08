@@ -1,6 +1,5 @@
 package io.github.bgmsound.chipmunk.handler
 
-import io.github.bgmsound.chipmunk.Chat
 import io.github.bgmsound.chipmunk.usecase.ChatSummaryUsecase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Component
 class GuildChatSummationRequestListener(
     @Value("\${app.message.discord.summary-reaction-code}") private val summaryReactionCode: String,
     @Value("\${app.message.discord.summary-message}") private val summaryMessage: String,
+    @Value("\${app.message.discord.summary-complete-message}") private val summaryCompleteMessage: String,
 
     private val coroutineScope: CoroutineScope,
     private val messageFetcher: DiscordReactionMessageFetcher,
@@ -38,9 +38,9 @@ class GuildChatSummationRequestListener(
         val mention = event.user?.asMention
         val channel = event.channel
 
-        /*mention?.let { mention ->
+        mention?.let { mention ->
             channel.sendMessage(summaryMessage.replace("{mention}", mention)).queue()
-        }*/
+        }
         coroutineScope.launch {
             val messages = async {
                 val messages = messageFetcher.fetchMessageUntil(event.messageId, channel)
@@ -55,6 +55,14 @@ class GuildChatSummationRequestListener(
             }
             launch {
                 val result = chatSummaryUsecase.summarizeMessage(messages)
+                mention?.let { mention ->
+                    channel.sendMessage(
+                        summaryCompleteMessage
+                            .replace("{message-size}", messages.size.toString())
+                            .replace("{mention}", mention)
+                            .replace("{link}", "[${result.title} #${result.id.value}](${result.url})")
+                    ).queue()
+                }
             }
         }
     }

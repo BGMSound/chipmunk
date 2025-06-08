@@ -6,6 +6,8 @@ import io.github.bgmsound.chipmunk.GithubSummaryPRCreator
 import io.github.bgmsound.chipmunk.LLMChatSummaryAgent
 import io.github.bgmsound.chipmunk.Topic
 import io.github.bgmsound.chipmunk.TopicRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.springframework.stereotype.Component
 
 @Component
@@ -13,12 +15,15 @@ class DefaultChatSummaryUsecase(
     private val llmChatSummaryAgent: LLMChatSummaryAgent,
     private val prCreator: GithubSummaryPRCreator,
 
-    private val topicRepository: TopicRepository
+    private val topicRepository: TopicRepository,
+    private val coroutineScope: CoroutineScope
 ) : ChatSummaryUsecase {
-    override fun summarizeMessage(chats: List<Chat>): SummaryPR {
+    override suspend fun summarizeMessage(chats: List<Chat>): SummaryPR {
         val llmSummary = llmChatSummaryAgent.summarizeMessage(chats)
 
-        topicRepository.addAll(llmSummary.topics.map { Topic(it) }.toSet())
+        coroutineScope.launch {
+            topicRepository.addAll(llmSummary.topics.map { Topic(it) }.toSet())
+        }
         return prCreator.createPR(llmSummary)
     }
 }

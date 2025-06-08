@@ -2,7 +2,7 @@ package io.github.bgmsound.chipmunk
 
 class SummaryId(
     val platform: Platform,
-    val id: String
+    val value: String
 ) {
     enum class Platform {
         GITHUB

@@ -14,34 +14,23 @@ class GithubSummaryPRCreator(
         val prBranch = "${date}-${createRandomTail()}"
         val baseBranch = remoteRepository.defaultBranch
 
-        val baseRef = getEnsuredRef(baseBranch)
+        val baseRef = remoteRepository.getEnsuredRef(baseBranch)
         remoteRepository.createRef("refs/heads/$prBranch", baseRef.`object`.sha)
 
         commitDailySummary(prBranch, summary)
         for (topic in summary.topics) {
             commitTopicSummary(summary.title, topic, prBranch)
         }
-        val prTitle = "${summary.title} -(${date})"
+        val prTitle = "${summary.title} - (${date})"
         val prBody = "${summary.content}\n\n\n\n**[자동생성 요약 PR 정보]**\n- 날짜: $date\n- 토픽: ${summary.topics}"
         val pullRequest = remoteRepository.createPullRequest(prTitle, prBranch, baseBranch, prBody)
 
-        return SummaryPR.of(pullRequest.id.toString(), pullRequest.htmlUrl.toString())
+        return SummaryPR.of(
+            pullRequest.id.toString(),
+            pullRequest.title,
+            pullRequest.htmlUrl.toString()
+        )
     }
-
-    private fun getEnsuredRef(branch: String): GHRef {
-        return try {
-            remoteRepository.getRef("heads/$branch")
-        } catch (exception: GHFileNotFoundException) {
-            remoteRepository.createContent()
-                .branch(branch)
-                .path("README.md")
-                .content("README.md")
-                .message("Initialize repository with README.md")
-                .commit()
-            remoteRepository.getRef("heads/$branch")
-        }
-    }
-
 
     private fun commitDailySummary(branch: String, summary: LLMSummary): GHContentUpdateResponse {
         val dailyPath = "docs/daily/$branch.md"
@@ -88,6 +77,20 @@ class GithubSummaryPRCreator(
             this.sha(file.sha)
         } else {
             this
+        }
+    }
+
+    private fun GHRepository.getEnsuredRef(branch: String): GHRef {
+        return try {
+            getRef("heads/$branch")
+        } catch (exception: GHFileNotFoundException) {
+            createContent()
+                .branch(branch)
+                .path("README.md")
+                .content("README.md")
+                .message("Initialize repository with README.md")
+                .commit()
+            getRef("heads/$branch")
         }
     }
 

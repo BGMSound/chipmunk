@@ -5,6 +5,6 @@ import io.github.bgmsound.chipmunk.SummaryPR
 
 interface ChatSummaryUsecase {
 
-    fun summarizeMessage(chats: List<Chat>): SummaryPR
+    suspend fun summarizeMessage(chats: List<Chat>): SummaryPR
 
 }

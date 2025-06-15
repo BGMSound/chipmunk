@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 plugins {
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.plugin.spring) apply false
-    alias(libs.plugins.spring.boot)
     java
 }
 

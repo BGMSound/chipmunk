@@ -12,6 +12,7 @@ github-api = "2.0-rc.3"
 jackson = "2.17.2"
 jda = "5.5.1"
 mysql = "8.0.33"
+jib = "3.4.5"
 
 [libraries]
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
@@ -43,3 +44,5 @@ kotlin-plugin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref 
 jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
+
+jib = { id = "com.google.cloud.tools.jib", version.ref = "jib" }

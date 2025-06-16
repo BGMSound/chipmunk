@@ -11,12 +11,12 @@ jobs:
   setup-phase:
     runs-on: ubuntu-latest
     outputs:
-      image-name: ${{ env.IMAGE_NAME }}
+      image-name: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}
       image-tag: ${{ steps.setup-environment-variable.outputs.image-tag }}
     steps:
-      - name: checkout github repository
+      - name: Checkout Github Repository
         uses: actions/checkout@v4
-      - name: setup environment variable
+      - name: Setup Environment Variable
         id: setup-environment-variable
         run: |
           echo "image-tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
@@ -29,3 +29,12 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  deploy-phase:
+    needs: [ setup-phase, build-phase ]
+    uses: ./.github/workflows/deploy.yaml
+    with:
+      image-name: ${{ needs.setup-phase.outputs.image-name }}
+      image-tag: ${{ needs.setup-phase.outputs.image-tag }}
+      repository-name: 'GyuminBae/chipmunk-manifest'
+    secrets:
+      REPOSITORY_PAT_TOKEN: ${{ secrets.REPOSITORY_PAT_TOKEN }}

@@ -1,0 +1,43 @@
+name: Update Kustomization Image Tag
+on:
+  workflow_call:
+    inputs:
+      repository-name:
+        required: true
+        type: string
+      image-name:
+        required: true
+        type: string
+      image-tag:
+        required: true
+        type: string
+    secrets:
+      REPOSITORY_PAT_TOKEN:
+        required: true
+
+jobs:
+  build:
+    runs-on: [ ubuntu-latest ]
+    name: Update Kustomization Image Tag
+    steps:
+      - name: Checkout Github Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repository-name }}
+          token: ${{ secrets.REPOSITORY_PAT_TOKEN }}
+
+      - name: Setup Kustomize
+        uses: imranismail/setup-kustomize@v2
+
+      - name: Set Image Tag in Kustomization
+        run: |
+          cd overlay
+          kustomize edit set image ${{ inputs.image-name }}=${{ inputs.image-name }}:${{ inputs.image-tag }}
+          cat kustomization.yaml
+          
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "Update chipmunk image tag to ${{ inputs.image-tag }}"
+          git config pull.rebase true
+          git pull
+          git push -u origin main

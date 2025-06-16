@@ -34,7 +34,7 @@ jib {
         tags = setOf("latest", imageTag)
         auth {
             username = System.getenv("DOCKERHUB_USERNAME")
-            password = System.getenv("DOCKERHUB_PASSWORD")
+            password = System.getenv("DOCKERHUB_TOKEN")
         }
     }
     container {

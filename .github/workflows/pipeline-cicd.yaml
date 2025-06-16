@@ -1,0 +1,29 @@
+on:
+  push:
+    branches: [ 'main' ]
+
+concurrency:
+  group: pipeline
+
+env:
+  IMAGE_NAME: 'chipmunk'
+jobs:
+  setup-phase:
+    runs-on: ubuntu-latest
+    outputs:
+      image-name: ${{ env.IMAGE_NAME }}
+    steps:
+      - name: checkout github repository
+        uses: actions/checkout@v4
+      - name: setup environment variable
+        run: |
+          echo "image-tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+  build-phase:
+    needs: [ setup-phase ]
+    uses: ./.github/workflows/build-dockerhub.yaml
+    with:
+      image-name: ${{ needs.setup-phase.outputs.image-name }}
+      image-tag: ${{ needs.setup-phase.outputs.image-tag }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

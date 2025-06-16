@@ -12,10 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image-name: ${{ env.IMAGE_NAME }}
+      image-tag: ${{ steps.setup-environment-variable.outputs.image-tag }}
     steps:
       - name: checkout github repository
         uses: actions/checkout@v4
       - name: setup environment variable
+        id: setup-environment-variable
         run: |
           echo "image-tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
   build-phase:

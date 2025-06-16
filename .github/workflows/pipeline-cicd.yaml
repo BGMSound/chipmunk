@@ -19,7 +19,7 @@ jobs:
       - name: Setup Environment Variable
         id: setup-environment-variable
         run: |
-          echo "image-name=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
+          echo "image-name=${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
           echo "image-tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
   build-phase:
     needs: [ setup-phase ]
@@ -38,4 +38,5 @@ jobs:
       image-tag: ${{ needs.setup-phase.outputs.image-tag }}
       repository-name: 'GyuminBae/chipmunk-manifest'
     secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       REPOSITORY_PAT_TOKEN: ${{ secrets.REPOSITORY_PAT_TOKEN }}

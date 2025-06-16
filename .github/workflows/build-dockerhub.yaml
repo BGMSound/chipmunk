@@ -35,5 +35,5 @@ jobs:
           chmod +x ./gradlew
           ./gradlew jib --stacktrace
         env:
-          IMAGE_NAME: ${{ inputs.image-name }}
+          IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}
           IMAGE_TAG: ${{ inputs.image-tag }}

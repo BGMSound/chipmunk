@@ -24,8 +24,8 @@ tasks.bootJar {
 }
 
 jib {
-    val imageTag = property("project.version").toString()
-    val imageName = property("project.image").toString()
+    val imageName = System.getenv("IMAGE_NAME") ?: property("project.image").toString()
+    val imageTag = System.getenv("IMAGE_TAG") ?: property("project.version").toString()
     from {
         image = "openjdk:21-jdk"
     }

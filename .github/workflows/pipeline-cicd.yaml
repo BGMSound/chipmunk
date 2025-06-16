@@ -11,7 +11,7 @@ jobs:
   setup-phase:
     runs-on: ubuntu-latest
     outputs:
-      image-name: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+      image-name: ${{ steps.setup-environment-variable.outputs.image-name }}
       image-tag: ${{ steps.setup-environment-variable.outputs.image-tag }}
     steps:
       - name: Checkout Github Repository
@@ -19,6 +19,7 @@ jobs:
       - name: Setup Environment Variable
         id: setup-environment-variable
         run: |
+          echo "image-name=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}" >> $GITHUB_OUTPUT
           echo "image-tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
   build-phase:
     needs: [ setup-phase ]
